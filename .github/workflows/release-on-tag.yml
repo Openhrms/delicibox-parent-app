@@ -1,0 +1,56 @@
+name: Release on tag
+
+on:
+  push:
+    tags:
+      - 'v*'   # any tag like v0.1.0
+
+permissions:
+  contents: write   # needed to create a GitHub Release and upload assets
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          channel: 'stable'
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      # ---- Build Android APKs (unsigned release, per-ABI) ----
+      - name: Build Android APKs
+        run: flutter build apk --release --split-per-abi
+
+      - name: Collect APK artifacts
+        run: |
+          mkdir -p artifacts
+          cp build/app/outputs/flutter-apk/*.apk artifacts/
+
+      # ---- Build Flutter Web bundle ----
+      - name: Build Web
+        run: flutter build web --release
+
+      - name: Zip Web build
+        run: |
+          cd build/web
+          zip -r ../web-build.zip .
+          cd -
+          mv build/web-build.zip artifacts/
+
+      # ---- Create GitHub Release and upload artifacts ----
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            artifacts/*.apk
+            artifacts/web-build.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
