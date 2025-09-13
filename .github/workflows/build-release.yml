@@ -1,0 +1,102 @@
+name: Build Android & Web (and deploy Pages)
+
+on:
+  push:
+    branches: [ main ]
+    tags: ['v*']   # also run on version tags like v0.1.0
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  android:
+    name: Android build (debug APK + release AAB)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          channel: 'stable'
+          cache: true
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Get packages
+        run: flutter pub get
+
+      - name: Build debug APK (installable)
+        run: |
+          flutter build apk \
+            --debug \
+            --dart-define=FLAVOR=dev \
+            --dart-define=BASE_URL=https://api.dev.delicibox.com
+
+      - name: Build release AppBundle (unsigned)
+        run: |
+          flutter build appbundle \
+            --release \
+            --dart-define=FLAVOR=dev \
+            --dart-define=BASE_URL=https://api.dev.delicibox.com || true
+
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-artifacts
+          path: |
+            build/app/outputs/flutter-apk/app-debug.apk
+            build/app/outputs/bundle/release/*.aab
+          if-no-files-found: warn
+
+  web:
+    name: Build Flutter Web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Web
+        run: flutter config --enable-web
+
+      - name: Get packages
+        run: flutter pub get
+
+      - name: Build Web
+        run: |
+          flutter build web --release \
+            --dart-define=FLAVOR=dev \
+            --dart-define=BASE_URL=https://api.dev.delicibox.com
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy-pages:
+    name: Deploy GitHub Pages
+    needs: web
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
