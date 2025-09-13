@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "505237950543",
+    "project_id": "delicibox-dev",
+    "storage_bucket": "delicibox-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505237950543:android:0b78b3c897d8eac8305a3a",
+        "android_client_info": {
+          "package_name": "com.delicibox.parent_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAmYzMAfEgYOI0Vu3KfXlOxtziG98dSsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

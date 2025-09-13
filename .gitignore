@@ -1,0 +1,35 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+pubspec.lock
+.melos_tool/
+
+# Android
+android/.gradle/
+android/local.properties
+android/app/release/
+android/key.properties
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+ios/Flutter/Debug.xcconfig
+ios/Flutter/Release.xcconfig
+Runner/GeneratedPluginRegistrant.*
+
+# Web
+web/.flutter-plugins
+
+# Xcode / IDE
+*.xcuserstate
+*.iml
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# Misc
+coverage/
