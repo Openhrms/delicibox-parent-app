@@ -1,35 +1,40 @@
-# Flutter/Dart
+# Dart & Flutter
 .dart_tool/
 .packages
-build/
-pubspec.lock
 .melos_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.fvm/
+pubspec.lock
+build/
+coverage/
+*.iml
 
 # Android
 android/.gradle/
 android/local.properties
-android/app/release/
-android/key.properties
+android/app/build/
 
 # iOS
-ios/Pods/
+ios/Flutter/.last_build_id
+ios/Flutter/ephemeral/
 ios/.symlinks/
-ios/Flutter/Flutter.framework/
-ios/Flutter/Flutter.podspec
-ios/Flutter/Debug.xcconfig
-ios/Flutter/Release.xcconfig
-Runner/GeneratedPluginRegistrant.*
+ios/Pods/
 
-# Web
-web/.flutter-plugins
-
-# Xcode / IDE
+# Xcode user data
 *.xcuserstate
-*.iml
-*.log
-.DS_Store
-.idea/
-.vscode/
+*.xcscmblueprint
+*.xcuserdatad
+DerivedData/
 
-# Misc
-coverage/
+# macOS / Windows / Linux ephemeral (if enabled)
+macos/Flutter/ephemeral/
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
